@@ -12,4 +12,4 @@ Classes:We will have a base class with one subclass. This subclass will have thr
 
 Prototype and Research: create a small prototype using fork(), waitpid(), and execvp() individually and together
 
-Development and Testing roadmap: We will start by developing the composite pattern. We will start by creating a common interface. After, we will make that filter subclass. Later, we will develop the simple, DoubleAnd and DoubleOr subclasses. If this does not work, then we will create a strategy to handle the filtering. 
+Development and Testing roadmap: We will start by developing the composite pattern. We will start by creating a common interface. After, we will make that filter subclass. Later, we will develop the simple, DoubleAnd and DoubleOr subclasses.Once this is done, we will develop a run function that will check to see if each command is executable. If this does not work, then we will create a strategy to handle the filtering. 
