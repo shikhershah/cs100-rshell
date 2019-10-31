@@ -16,5 +16,27 @@ Prototype and Research: create a small prototype using fork(), waitpid(), and ex
 
 Fork() creates a new process that is a copy of the existing process. execvp() replaces that current process with a completely new process. waitpid() puts a hold on either the parent or child. 
 
+#include <iostream>
+int main() {
+const int num_process = 32;   
+pid pids[128];
+
+for (int i = 0; i < num_process;i ++) {
+   pids[i] = fork();
+   if (!pids[i]) {  
+       char* cmd = "echo"
+	int* argv[i] = i;
+	execvp(cmd,argv);
+
+       exit(0);
+   }
+}
+
+for (int i = 0; i < num_process; i++){
+    waitpid(-1, NULL, 0);
+}
+return 0;
+}
+
 
 Development and Testing roadmap: We will start by developing the composite pattern. We will start by creating a common interface. After, we will make that filter subclass. In this filter class we  will develop two vectors; firstcommand and secondcommand.  Later, we will develop the simple, DoubleAnd and DoubleOr subclasses. These subclasses will hold strings of the commands. For example, the simple will hold "ls -a". The DoubleAnd will hold "echo world && mkdir Test". The DoubleOr will hold "echo world || mkdir Test".  Once this is done, we will develop a run function that will check to see if each command is executable. In this run function, we will have a counter to see how many && and || there are. If there is more than 1 then we will decrement the count and make the first portion, firstcommand and the command after the second connector secondcommand.  If this does not work, then we will create a strategy to handle the filtering. 
