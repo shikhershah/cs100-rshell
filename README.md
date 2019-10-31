@@ -14,7 +14,6 @@ Classes:We will have a base class with one subclass. This subclass will have thr
 
 Prototype and Research: create a small prototype using fork(), waitpid(), and execvp() individually and together
 
-
 Fork() creates a new process that is a copy of the existing process. execvp() replaces that current process with a completely new process. waitpid() puts a hold on either the parent or child. 
 
 
