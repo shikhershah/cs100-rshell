@@ -55,6 +55,9 @@ int main() {
       }
     }
     // test to make sure we broke down our commands correctly and print
+    // Later we will push each vector[i] to the proper class && or || to execute command.
+    // if there are more logic operators we will erase what have already compiled and return our next string.
+    // We continue doing this until we reach the end of that command line
     int i =0;
     while(i<getCommands.size()){
         std::cout << "Command[" << i << "]: ";
@@ -63,19 +66,24 @@ int main() {
     } 
 
     std::cout << std::endl;
-    // this tests or long command, getCommand[1], and counts the number of logic operators 
+    // this tests our long command, getCommand[1], and counts the number of logic operators
+    // This will tell us how many more comparisons we have.
+    // If we have more than one concatanate all the comparison on the left of the logic operator 
+    // and compare to the right side
+    // Repeat until we reach the end of that particular getCommand[] line.
     i =0;
+   
     int andCounter = 0;
     int orCounter = 0;
-
+    int total;
     std::cout << getCommands[1] << std::endl;
     andCounter = OpOccurence(getCommands[1], "&&");
     orCounter = OpOccurence(getCommands[1], "||");
-    
+    total = andCounter + orCounter;
+
     std::cout << "And counter: " << andCounter << std::endl;
     std::cout << "Or counter: " << orCounter << std::endl;
-
-
+    std::cout << "Total: " << total << std::endl;
 
 
 
