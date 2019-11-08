@@ -1,18 +1,19 @@
 #include <iostream>
 #include <string>
 #include <vector>
+using namespace std;
 // This function will check the number of occurences of our connector and return it.
 // Our function will take in 2 variables:
 // strCommand: the string that will contain the && and || operators.
 // logicOp: the operator we will be looking for.
 //
 // We will delete the part of the string we have
-int OpOccurence(std::string strCommand, std::string logicOp){
+int OpOccurence(string strCommand, string logicOp){
     int opCounter = 0;
     int location = 0;
     
     while(strCommand.length() != 0){
-        if(strCommand.find(logicOp) != std::string::npos){
+        if(strCommand.find(logicOp) != -1){
             location = strCommand.find(logicOp);
             strCommand.erase(0,location+2);
             opCounter++;
@@ -23,17 +24,64 @@ int OpOccurence(std::string strCommand, std::string logicOp){
 }
 
 
+/*
+ getCommand will return an index of where our logical opeator was found.
+ It will also make sure we disregard logic operators inside quotes
+*/
+int getCommandIndex(string s){
+    int i = 0; // iterator through string
+    bool openQ = false; // check if we have an open quote
+    
+    // iterate through string
+    while(i<s.length()){
+        // if we have an open quotes check to see if s[i] == ", if so then flip the boolean answer
+        if(openQ){
+            if(s.at(i) == '"'){
+                openQ = !openQ;
+            }
+        }  
+        else
+            switch (s.at(i)) { 
+                // if s[i] == " , flip the boolean answer
+                case '"':
+                {
+                    openQ = !openQ;
+                }
+                // if s[i] == &
+                case '&':
+                {
+                    // Make sure it's not inside open quotes, if not then return index i
+                    if(!openQ)
+                        return i;
+                    break;
+                }
+                // if s[i] == |
+                case '|':
+                {
+                    // Make sure it's not inside open quotes, if not then return index i
+                    if(!openQ)
+                        return i;
+                    break;
+                } 
+            }
+        i++;
+    }
+    // return the entire lenght if not logic operator found
+    return s.length();  
+}
+
+
+
 int main() {
 
-    std::string user_input = "ls -a;echo hello && echo hi && echo teller || echo fine; ls -m";
+    string user_input = "ls -a;echo \"hello&&\" && echo hi; echo hello && echo hi && echo teller || echo fine || echo last; ls -m";
     int str_len = user_input.length();
     int connectorLocation;
-    int connectorCounter = 0;
-    std::vector<std::string> getCommands;
+    vector<string> getCommands;
     
     
-    std::cout << user_input << std::endl;
-    std::cout << std::endl        
+    cout << user_input << endl;
+    cout << endl;        
 
     //Make a while loop that breaks commands based on ; and pushes it to command vector
     while(user_input.length() != 0){
@@ -71,20 +119,18 @@ int main() {
     // If we have more than one concatanate all the comparison on the left of the logic operator 
     // and compare to the right side
     // Repeat until we reach the end of that particular getCommand[] line.
-    i =0;
-   
-    int andCounter = 0;
-    int orCounter = 0;
-    int total;
-    std::cout << getCommands[1] << std::endl;
-    andCounter = OpOccurence(getCommands[1], "&&");
-    orCounter = OpOccurence(getCommands[1], "||");
-    total = andCounter + orCounter;
+    cout << endl;
 
-    std::cout << "And counter: " << andCounter << std::endl;
-    std::cout << "Or counter: " << orCounter << std::endl;
-    std::cout << "Total: " << total << std::endl;
-
+    //  **** BRUTE FORCE TEST CASE: getCommands[1] *****
+    string test = getCommands[1];
+    
+    int indexVal = getCommandIndex(test);
+    
+    cout << "Command1: " << test.substr(0,indexVal) << endl;
+    test = test.substr(indexVal+2, test.length());
+    
+    indexVal = getCommandIndex(test);
+    cout << "Command2: " << test.substr(0,indexVal) << endl;
 
 
 
