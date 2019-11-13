@@ -2,27 +2,6 @@
 #include <string>
 #include <vector>
 using namespace std;
-// This function will check the number of occurences of our connector and return it.
-// Our function will take in 2 variables:
-// strCommand: the string that will contain the && and || operators.
-// logicOp: the operator we will be looking for.
-//
-// We will delete the part of the string we have
-int OpOccurence(string strCommand, string logicOp){
-    int opCounter = 0;
-    int location = 0;
-    
-    while(strCommand.length() != 0){
-        if(strCommand.find(logicOp) != -1){
-            location = strCommand.find(logicOp);
-            strCommand.erase(0,location+2);
-            opCounter++;
-        } else
-            strCommand.erase(0,strCommand.length());
-    }
-    return opCounter;
-}
-
 
 /*
  getCommand will return an index of where our logical opeator was found.
@@ -70,15 +49,65 @@ int getCommandIndex(string s){
     return s.length();  
 }
 
+/*
+ *
+ *
+ */
+string newString(int begOp, int opIndex, string s){
+    if(begOp == -1){
+        if(opIndex < s.length()){
+	    char letterOrOP = s.at(opIndex);
+            if(letterOrOP == '&' && s.at(opIndex+1) == '&')
+                return s.substr(0, opIndex);
+            else if(letterOrOP == '|' && s.at(opIndex+1) == '|')
+                return s.substr(0, opIndex);
+            else
+                return s.substr(begOp,s.length());
+        }
+    } else {
+        if(opIndex < s.length()){
+            char letterOrOP = s.at(opIndex);
+            if(letterOrOP == '&' && s.at(opIndex+1) == '&')
+                return s.substr(begOp, opIndex-begOp);
+            else if(letterOrOP == '|' && s.at(opIndex+1) == '|')
+                return s.substr(begOp, opIndex-begOp);
+            else
+                return s.substr(begOp, opIndex-begOp);
+        } else if(opIndex == s.length())
+            return  s.substr(begOp,s.length());
+        
+    }
+    return s.substr(opIndex,s.length());
+}
+
+
+
+void print(string s1, string s2){
+    cout << "S1: " << s1 << "   S2: " << s2 << endl;
+    
+    if(s1 == " " && s2 == " ")
+        cout << "Both strings are empty" << endl;
+    else if (s1 != " " && s2 != " "){
+        cout << "Command 1: " << s1 << endl;
+        cout << "Command 2: " << s2 << endl;
+    }
+    else if(s1 != " " && s2 == " "){
+        cout << "Command 1: " << s1 << endl;
+        cout << "Command 2: None" << endl;
+    }
+    else if (s1 == " " && s1 != " "){
+        cout << "Command 1: None" << endl;
+        cout << "Command 2: " << s2 << endl;
+    }
+}
+
 
 
 int main() {
 
     string user_input = "ls -a;echo \"hello&&\" && echo hi; echo hello && echo hi && echo teller || echo fine || echo last; ls -m";
-    int str_len = user_input.length();
     int connectorLocation;
     vector<string> getCommands;
-    
     
     cout << user_input << endl;
     cout << endl;        
@@ -89,18 +118,17 @@ int main() {
     // this will tell us were a new command begins
         connectorLocation = user_input.find(";");
 
-    // if ; found: get the location of ; then parse and push to our vector command.
-    // After delete it from our string
-    if(user_input.find(";") != std::string::npos){
-        connectorLocation = user_input.find(";");
-        getCommands.push_back(user_input.substr(0,connectorLocation));
-    // else push the remaining code to our vector of commands then delete from our string
-
-    } else {
-        getCommands.push_back(user_input.substr(0,user_input.length()));
-        user_input.erase(0,connectorLocation);
-        user_input.erase(0,1);
-      }
+        // if ; found: get the location of ; then parse and push to our vector command.
+        // After delete it from our string
+        if(user_input.find(";") != std::string::npos){
+            connectorLocation = user_input.find(";");
+            getCommands.push_back(user_input.substr(0,connectorLocation));
+     	    user_input.erase(0,connectorLocation+1);
+        // else push the remaining code to our vector of commands then delete from our string
+        } else {
+            getCommands.push_back(user_input.substr(0,user_input.length()));
+            user_input.erase(0,connectorLocation);
+        }
     }
     // test to make sure we broke down our commands correctly and print
     // Later we will push each vector[i] to the proper class && or || to execute command.
@@ -108,30 +136,65 @@ int main() {
     // We continue doing this until we reach the end of that command line
     int i =0;
     while(i<getCommands.size()){
-        std::cout << "Command[" << i << "]: ";
-        std::cout << getCommands[i] << std::endl;
+        cout << "Command[" << i << "]: ";
+        cout << getCommands[i] << std::endl;
         i++;
     } 
 
-    std::cout << std::endl;
-    // this tests our long command, getCommand[1], and counts the number of logic operators
-    // This will tell us how many more comparisons we have.
-    // If we have more than one concatanate all the comparison on the left of the logic operator 
-    // and compare to the right side
-    // Repeat until we reach the end of that particular getCommand[] line.
+
     cout << endl;
-
-    //  **** BRUTE FORCE TEST CASE: getCommands[1] *****
-    string test = getCommands[1];
     
-    int indexVal = getCommandIndex(test);
-    
-    cout << "Command1: " << test.substr(0,indexVal) << endl;
-    test = test.substr(indexVal+2, test.length());
-    
-    indexVal = getCommandIndex(test);
-    cout << "Command2: " << test.substr(0,indexVal) << endl;
+    for(int i = 0; i<getCommands.size(); i++){
+        test = getCommands[i];
+        string holdString = test;
+        string firstCommand = " ";
+        string secondCommand = " ";
+        int currOpIndex = 0;
+        int prevOpIndex = -1;
+        
+        cout << "*******[" << i <<"]*******" << endl;
+        cout << "Current Command: " << test << endl;
+        
+        while(currOpIndex < test.length()){
+            currOpIndex += getCommandIndex(holdString);
+            
+            if(currOpIndex == test.length()){
+                if(firstCommand == " "){
+                    firstCommand = holdString;
+                    print(firstCommand, secondCommand);
+                    holdString = " ";
+                } else if(secondCommand == " "){
+                    secondCommand =  holdString;
+                    print(firstCommand, secondCommand);
+                }
+            }else {
+                if(firstCommand == " "){
+                    firstCommand =  newString(prevOpIndex, currOpIndex, test);
+                    prevOpIndex = currOpIndex+2;
+ 
+                } else if(secondCommand == " "){
+                    secondCommand =  newString(prevOpIndex,currOpIndex, test);
+                    prevOpIndex = currOpIndex+2;
+                } else{
+                    firstCommand = test.substr(0,prevOpIndex-2);
+                    secondCommand = newString(prevOpIndex, currOpIndex, test);
+                    prevOpIndex = currOpIndex+2;
+                    
+                }
+                print(firstCommand, secondCommand);
+                cout << endl;
+                currOpIndex+=2;
+                holdString = test.substr(currOpIndex,test.length());
+            }
+        }
+        if(currOpIndex == test.length()){
+            firstCommand = test.substr(0,prevOpIndex-2);
+            secondCommand = newString(prevOpIndex, currOpIndex, test);           
+        }
 
-
-
+    cout << endl;
+        
+    }
+    return 0;
+}
 
