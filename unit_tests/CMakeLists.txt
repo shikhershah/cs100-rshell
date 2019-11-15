@@ -1,6 +1,16 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
+
+
+
+
+
+
+
 ADD_EXECUTABLE(test
-    parser.cpp
+    unit_test.cpp
 )
+
+
+
 

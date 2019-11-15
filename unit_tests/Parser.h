@@ -33,7 +33,9 @@ public:
     virtual bool run(){
 	// returns our result
 	bool execute = false;
-
+	if (user_input == "") {
+	return false;
+	}
 	// comm: hold a vector<string> of our commands
         vector<string> comm = getAllCommands();
 	int i = 0;

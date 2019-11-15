@@ -13,6 +13,7 @@ public:
     Base() {};
     
     virtual bool run() = 0;
+    //virtual void dissect() = 0;
     virtual void print(string firstCommand, string secondCommand)=0;
 };
 
