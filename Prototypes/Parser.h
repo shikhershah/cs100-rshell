@@ -123,7 +123,7 @@ public:
         string s = test;
 	// prevOpIndex: tells us if we have an encounted a logic operator and the index. if it equals -1, then we haven't encountered one
         if(prevOpIndex == -1){
-   	    // 
+   	    // Look for logic op, if none found return string 
             if(currOpIndex < s.length()){
                 char letterOrOP = s.at(currOpIndex);
                 if(letterOrOP == '&' && s.at(currOpIndex+1) == '&')
@@ -133,6 +133,8 @@ public:
                 else
                     return s.substr(prevOpIndex,s.length());
             }
+	// if we have a previous logic op, find out if our next command
+	// is in the middle or end of our string
         } else {
             if(currOpIndex < s.length()){
                 char letterOrOP = s.at(currOpIndex);
@@ -150,24 +152,29 @@ public:
     }
 
 
-
+    // dissect() will iterate through our vector that contains strings of our commands
+    // 
     virtual void dissect(){
+	// reset our variables after iteration to avoid carrying over results from a previous iteration
         for(int i=0;i<commands.size(); i++){
             test = commands[i];
             holdString = test;
             string firstCommand = "";
             string secondCommand = "";
-            currOpIndex = 0;
-            prevOpIndex = -1;
+            currOpIndex = 0;  
+            prevOpIndex = -1; 
             
             // test: this tell use our current commands[i]
             //cout << "*******[" << i <<"]*******" << endl;
             //cout << "Current Command: " << test << endl;
             
-         
+            // while loop will cycle through string to find first and secondCommand.
             while(currOpIndex < test.length()){
+		// get the index location of the next logic operator so we can get the substring to make 
+		// firstCommand or secondCommand
                 currOpIndex += getCommandIndex();
-                
+                // If no logic op is found
+                // place in firstCommand, secondCommand, or concatenate commands 
                 if(currOpIndex == test.length()){
                     if(firstCommand == ""){
                         firstCommand = holdString;
@@ -177,6 +184,7 @@ public:
                         firstCommand = test.substr(0,prevOpIndex-2);
                         secondCommand = newString();
 			}
+		// if logic op is found
                 }else {
                     if(firstCommand == ""){
                         firstCommand =  newString();
@@ -186,18 +194,23 @@ public:
                         firstCommand = test.substr(0,prevOpIndex-2);
                         secondCommand = newString();
                     }
+		    // increment currOpIndex by 2, to take into account && or ||
+		    // prevOpIndex gets our currOpIndex since it can be a previous op in the next iteration
+		    // holdString will get the new substring of test which is the part of the string we havent reached
                     currOpIndex+=2;
                     prevOpIndex = currOpIndex;
                     holdString = test.substr(currOpIndex,test.length());
                 }
-                
+                // if we only have one command in our string, call SingleCommand to check if it will execute
 		if(secondCommand.empty() && currOpIndex == test.length()){
                     SingleCommand S(firstCommand, secondCommand);
                     S.run();
                 }               
+		// if we have 2 commands along with && then pass the AndLogic class both commands to check if it will execute 
 		else if(test.at(prevOpIndex-2) == '&' && !secondCommand.empty()){
                     AndLogicOp A(firstCommand,secondCommand);
                     A.run();
+		// else if we have 2 commands along with ||, then pass OrLogicOp class both commands to check if it will execute
                 } else if(test.at(prevOpIndex-2) == '|' && !secondCommand.empty()){
                     OrLogicOp O(firstCommand,secondCommand);
                     O.run();
@@ -211,7 +224,7 @@ public:
     }
 
 
-
+    // void print() will print out the status of first and secondCommand
     virtual void print(string firstCommand, string secondCommand){
 
         if(firstCommand == " " && secondCommand == " ")

@@ -18,15 +18,13 @@ public:
 	if(firstCommand.empty() || secondCommand.empty())
             return false;
         else{
-	    // *** check if our commands are valid using the forks and stuff method *****
- 	
+	    // *** check if our commands are valid using the forks and stuff method *****	
 	}
 	return true;
     }
 
     
-    virtual void print(string firstCommand, string secondCommand){
-        
+    virtual void print(string firstCommand, string secondCommand){   
         if(firstCommand.empty() && secondCommand.empty())
             cout << "Error: No Commands" << endl;
         else if(firstCommand.empty() && !secondCommand.empty())
