@@ -7,6 +7,7 @@
 #include "Base.h"
 #include "AndLogicOp.h"
 #include "OrLogicOp.h"
+#include "SingleCommand.h"
 using namespace std;
 
 
@@ -172,9 +173,10 @@ public:
                         firstCommand = holdString;
                     } else if(secondCommand == ""){
                         secondCommand =  holdString;
-                    } else
+                    } else{
                         firstCommand = test.substr(0,prevOpIndex-2);
                         secondCommand = newString();
+			}
                 }else {
                     if(firstCommand == ""){
                         firstCommand =  newString();
@@ -189,8 +191,11 @@ public:
                     holdString = test.substr(currOpIndex,test.length());
                 }
                 
-               
-		if(test.at(prevOpIndex-2) == '&' && !secondCommand.empty()){
+		if(secondCommand.empty() && currOpIndex == test.length()){
+                    SingleCommand S(firstCommand, secondCommand);
+                    S.run();
+                }               
+		else if(test.at(prevOpIndex-2) == '&' && !secondCommand.empty()){
                     AndLogicOp A(firstCommand,secondCommand);
                     A.run();
                 } else if(test.at(prevOpIndex-2) == '|' && !secondCommand.empty()){
