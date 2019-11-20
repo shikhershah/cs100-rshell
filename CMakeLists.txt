@@ -9,10 +9,10 @@ add_library(unit_tests unit_test.cpp)
 SET(CMAKE_CXX_STANDARD 11)
 
 
-ADD_EXECUTABLE(unit_test ${unit_tests}/unit_test.cpp)
-ADD_EXECUTABLE(test_1
-   unit_test.cpp
-)
+ADD_EXECUTABLE(unit_test 
+	${unit_tests}/unit_test.cpp)
+ADD_EXECUTABLE(test_1  
+	unit_test.cpp)
 
 TARGET_LINK_LIBRARIES(test_1 gtest)
 
