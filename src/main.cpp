@@ -1,5 +1,7 @@
 #include <string.h>
-#include "Parser.h"
+#include <unistd.h>
+#include "../header/Parser.h"
+
 using namespace std;
 
 int main() {
@@ -8,15 +10,15 @@ int main() {
  *  connectorLocation: the location of ";" so we can parse that command
  *  getCommands: this will hold our commands after we parse our string
 */
+    //pid_t pid = fork();
     Parser p;
     string user_input;
     int connectorLocation;
     vector<string> getCommands;
-   
 
     cout << "$ ";
     getline(cin, user_input);
-
+    
     cout << user_input << endl;
     cout << endl;
 
@@ -60,7 +62,7 @@ int main() {
     *  
     */
     for(int i = 0; i<getCommands.size(); i++){
-    string  test = getCommands[i];
+        string  test = getCommands[i];
         string holdString = test;
         string firstCommand = " ";
         string secondCommand = " ";
@@ -74,8 +76,11 @@ int main() {
             currOpIndex += p.getCommandIndex(holdString);
 
             if(currOpIndex == test.length()){
-                if(firstCommand == " "){
+                if(firstCommand == " "){  
                     firstCommand = holdString;
+		    // check for "exit"
+		    if(firstCommand == "exit")
+			return 0;
                     p.print(firstCommand, secondCommand);
                     holdString = " ";
                 } else if(secondCommand == " "){
