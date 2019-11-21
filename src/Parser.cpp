@@ -36,7 +36,14 @@ int Parser::getCommandIndex(string s){
                     if(!openQ)
                         return i;
                     break;
-                } 
+                }
+		case '#':
+		{
+			//Make sure if # the ignore 
+			if(!openQ)
+			       return -1;
+			break;
+		} 
             }
         i++;
     }
