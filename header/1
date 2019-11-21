@@ -1,5 +1,5 @@
-#ifndef Parser_h
-#define Parser_h
+#ifndef _Parser_h
+#define _Parser_h
 
 #include <iostream>
 #include <string>
@@ -34,10 +34,10 @@ public:
 	// returns our result
 	bool execute = false;
 	if (user_input == "") {
-	return false;
+     	    return false;
 	}
 	// comm: hold a vector<string> of our commands
-        vector<string> comm = getAllCommands();
+        vector<string> comm = getAllCommands(user_input);
 	int i = 0;
         while(i<comm.size()){
             cout << "Command[" << i << "]: ";
@@ -53,7 +53,7 @@ public:
      }
 
 
-    vector<string> getAllCommands(){
+    vector<string> getAllCommands(string user_input){
         // Make a while loop that breaks commands based on ; and pushes it to command vector
         while(user_input.length() != 0){
              // find the location of ; if present in our string.
@@ -75,20 +75,20 @@ public:
     }
 
 
-    int getCommandIndex() {
+    int getCommandIndex(string test) {
         int i = 0;  // iterator through string
         bool openQ = false;  // check if we have an open quote
         
       	//  iterate through string
-       	while(i<holdString.length()){
+       	while(i<test.length()){
             // if we have an open quotes check to see if s[i] == ", if so then flip the boolean answer
       	    if(openQ){
-                if(holdString.at(i) == '"'){
+                if(test.at(i) == '"'){
               	    openQ = !openQ;
 	        }
              }
              else
-                 switch (holdString.at(i)) {
+                 switch (test.at(i)) {
                      //if s[i] == " , flip the boolean answer
                      case '"':
                      {
@@ -114,43 +114,42 @@ public:
              i++;
         }
         // return the entire lenght if not logic operator found
-        return holdString.length();
+        return test.length();
     }
 
 
     // newString will return a string which will be our first or second command. 
     // We will find this by locating a logic operator 
-    string newString(){
-        //  Find which operator it is and return the new string after removing operators, or if none found then return back s
-        string s = test;
+    string newString(int prevOpIndex, int currOpIndex, string test){
+        //  Find which operator it is and return the new string after removing operators, or if none found then return back string test length
 	// prevOpIndex: tells us if we have an encounted a logic operator and the index. if it equals -1, then we haven't encountered one
         if(prevOpIndex == -1){
    	    // Look for logic op, if none found return string 
-            if(currOpIndex < s.length()){
-                char letterOrOP = s.at(currOpIndex);
-                if(letterOrOP == '&' && s.at(currOpIndex+1) == '&')
-                    return s.substr(0, currOpIndex);
-                else if(letterOrOP == '|' && s.at(currOpIndex+1) == '|')
-                    return s.substr(0, currOpIndex);
+            if(currOpIndex < test.length()){
+                char letterOrOP = test.at(currOpIndex);
+                if(letterOrOP == '&' && test.at(currOpIndex+1) == '&')
+                    return test.substr(0, currOpIndex);
+                else if(letterOrOP == '|' && test.at(currOpIndex+1) == '|')
+                    return test.substr(0, currOpIndex);
                 else
-                    return s.substr(prevOpIndex,s.length());
+                    return test.substr(prevOpIndex,test.length());
             }
 	// if we have a previous logic op, find out if our next command
 	// is in the middle or end of our string
         } else {
-            if(currOpIndex < s.length()){
-                char letterOrOP = s.at(currOpIndex);
-                if(letterOrOP == '&' && s.at(currOpIndex+1) == '&')
-                    return s.substr(prevOpIndex, currOpIndex-prevOpIndex);
-                else if(letterOrOP == '|' && s.at(currOpIndex+1) == '|')
-                    return s.substr(prevOpIndex, currOpIndex-prevOpIndex);
+            if(currOpIndex < test.length()){
+                char letterOrOP = test.at(currOpIndex);
+                if(letterOrOP == '&' && test.at(currOpIndex+1) == '&')
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
+                else if(letterOrOP == '|' && test.at(currOpIndex+1) == '|')
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
                 else
-                    return s.substr(prevOpIndex, currOpIndex-prevOpIndex);
-            } else if(currOpIndex == s.length())
-                return  s.substr(prevOpIndex,s.length());
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
+            } else if(currOpIndex == test.length())
+                return  test.substr(prevOpIndex,test.length());
             
         }
-        return s.substr(prevOpIndex,s.length());
+        return test.substr(prevOpIndex,test.length());
     }
 
 
@@ -174,7 +173,7 @@ public:
             while(currOpIndex < test.length()){
 		// get the index location of the next logic operator so we can get the substring to make 
 		// firstCommand or secondCommand
-                currOpIndex += getCommandIndex();
+                currOpIndex += getCommandIndex(test);
                 // If no logic op is found
                 // place in firstCommand, secondCommand, or concatenate commands 
                 if(currOpIndex == test.length()){
@@ -184,17 +183,17 @@ public:
                         secondCommand =  holdString;
                     } else{
                         firstCommand = test.substr(0,prevOpIndex-2);
-                        secondCommand = newString();
+                        secondCommand = newString(prevOpIndex, currOpIndex, test);
 			}
 		// if logic op is found
                 }else {
                     if(firstCommand == ""){
-                        firstCommand =  newString();
+                        firstCommand =  newString(prevOpIndex, currOpIndex, test);
                     } else if(secondCommand == ""){
-                        secondCommand =  newString();
+                        secondCommand =  newString(prevOpIndex, currOpIndex, test);
                     } else{
                         firstCommand = test.substr(0,prevOpIndex-2);
-                        secondCommand = newString();
+                        secondCommand = newString(prevOpIndex, currOpIndex, test);
                     }
 		    // increment currOpIndex by 2, to take into account && or ||
 		    // prevOpIndex gets our currOpIndex since it can be a previous op in the next iteration

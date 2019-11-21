@@ -1,15 +1,11 @@
 //#include <string>	
 //#include <iostream>
 
-
-
-
 #include "gtest/gtest.h"
-#include "Base.h"
-#include "Parser.h"
-#include "AndLogicOp.h"
-#include "OrLogicOp.h"
-
+#include "../header/Base.h"
+#include "../header/Parser.h"
+#include "../header/AndLogicOp.h"
+#include "../header/OrLogicOp.h"
 
 
 using namespace std;
