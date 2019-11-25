@@ -9,15 +9,21 @@ int main() {
  *  connectorLocation: the location of ";" so we can parse that command
  *  getCommands: this will hold our commands after we parse our string
 */
-    //Parser p;
+   // Parser p;
     string user_input;
   
     cout << "$ ";
     getline(cin, user_input);
-    
-    Base *p = new Parser(user_input);
-    cout << p->run();    
+   // test for # 
+   size_t comment = user_input.find("#");
+    if(comment != string::npos){
+          user_input.erase(comment,user_input.size()-1);
+    }
 
+   // Base *p = new Parser(user_input);
+   // cout << p->run();    
+   Base* p =new  Parser (user_input);
+	cout <<p->run();
     return 0;
 }
 
