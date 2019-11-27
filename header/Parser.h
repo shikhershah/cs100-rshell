@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unistd.h>
 #include "Base.h"
 #include "AndLogicOp.h"
 #include "OrLogicOp.h"
@@ -110,6 +111,12 @@ public:
                              return i;
                          break;
                      }
+		     case '#':
+		     {
+		         if(!openQ)
+			     return i;
+			 break;	
+		     }
                  }  
              i++;
         }
@@ -125,12 +132,14 @@ public:
 	// prevOpIndex: tells us if we have an encounted a logic operator and the index. if it equals -1, then we haven't encountered one
         if(prevOpIndex == -1){
    	    // Look for logic op, if none found return string 
-            if(currOpIndex < test.length()){
+            if(currOpIndex < test.length()){ 
                 char letterOrOP = test.at(currOpIndex);
                 if(letterOrOP == '&' && test.at(currOpIndex+1) == '&')
                     return test.substr(0, currOpIndex);
                 else if(letterOrOP == '|' && test.at(currOpIndex+1) == '|')
                     return test.substr(0, currOpIndex);
+		else if (test.at(currOpIndex)  == '#'    )
+		    return test.substr(0,currOpIndex);
                 else
                     return test.substr(prevOpIndex,test.length());
             }
@@ -203,6 +212,7 @@ public:
                     holdString = test.substr(currOpIndex,test.length());
                 }
                 // if we only have one command in our string, call SingleCommand to check if it will execute
+          //      fork();
 		if(secondCommand.empty() && currOpIndex == test.length()){
                     SingleCommand S(firstCommand, secondCommand);
                     S.run();
@@ -216,6 +226,7 @@ public:
                     OrLogicOp O(firstCommand,secondCommand);
                     O.run();
                 }
+	//	wait(11);		
             // test: this will print our current commands
             // print(firstCommand, secondCommand);
             
@@ -223,6 +234,19 @@ public:
 	    
         }
     }
+
+void    Test(string test) {
+
+        size_t t = test.find("test");
+            if(t != string::npos){
+                test.erase(t, 4);	 
+            }
+
+
+
+}
+
+
 
 
     // void print() will print out the status of first and secondCommand
@@ -264,7 +288,10 @@ public:
 
 
 
-
+//size_t comment = user_input.find("#");
+   // if(comment != string::npos){
+   //       user_input.erase(comment,user_input.size()-1);
+   // }
 
 
 
