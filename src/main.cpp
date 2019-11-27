@@ -15,15 +15,32 @@ int main() {
     cout << "$ ";
     getline(cin, user_input);
    // test for # 
-   size_t comment = user_input.find("#");
-    if(comment != string::npos){
-          user_input.erase(comment,user_input.size()-1);
-    }
+   
 
    // Base *p = new Parser(user_input);
-   // cout << p->run();    
-   Base* p =new  Parser (user_input);
-	cout <<p->run();
+   //     cout << p->run(); 
+/* size_t comment = user_input.find("#");
+     if(comment != string::npos){
+        user_input.erase(comment,user_input.size()-1);
+  }*/
+ size_t test = user_input.find("test");
+if(test != string::npos){
+      user_input.erase(test,4);
+}
+
+size_t brac_open = user_input.find("[");
+if(brac_open != string::npos){
+      user_input.erase(brac_open,1);
+}
+size_t brac_close = user_input.find("]");
+if(brac_close != string::npos){
+      user_input.erase(brac_close,1);
+}
+
+
+Base* p =new  Parser (user_input);
+	cout <<p->run();  
+   
     return 0;
 }
 
