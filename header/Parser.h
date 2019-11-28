@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "Base.h"
 #include "AndLogicOp.h"
 #include "OrLogicOp.h"
@@ -37,6 +39,7 @@ public:
 	if (user_input == "") {
      	    return false;
 	}
+        
 	// comm: hold a vector<string> of our commands
         vector<string> comm = getAllCommands(user_input);
 	int i = 0;
@@ -46,9 +49,21 @@ public:
             i++;
         }
         cout << endl;
-	// breakdown each command and send to our logic operator
-	dissect();
 	
+	//size_t execute_And = user_input.find("&");
+	
+	// breakdown each command and send to our logic operator
+	size_t execute_test = user_input.find("test");
+	size_t execute_brac = user_input.find("[");
+        if(execute_test != string::npos) {
+            test_ex(user_input);
+         }
+        else if(execute_brac != string::npos) {
+            test_ex(user_input);
+         }      	
+	else {
+            dissect();
+	}
 	execute = true;
 	return execute;
      }
@@ -213,6 +228,27 @@ public:
                 }
                 // if we only have one command in our string, call SingleCommand to check if it will execute
           //      fork();
+              /*   char** args;
+                 pid_t pid = fork();
+                  int status;
+             
+
+                if(pid < 0){
+                cout << "Error: fork() == -1" << endl;
+                exit(1);
+                   }
+                if(pid == 0){
+                    cout << "Child: " << pid << endl;
+                    if(execvp(args[0], args) ==-1){
+                        cout << "Error" << endl;
+                        exit(1);
+                       }
+                   } 
+
+                if(pid > 0)
+                   waitpid(-1, &pid, 0);
+                   cout << "Parent: " << pid << endl;
+*/
 		if(secondCommand.empty() && currOpIndex == test.length()){
                     SingleCommand S(firstCommand, secondCommand);
                     S.run();
@@ -235,15 +271,96 @@ public:
         }
     }
 
-void    Test(string test) {
+void test_ex(string& user_input) {
+	string a = "test";
+    size_t test = user_input.find("test");
+    if(test != string::npos){
+        user_input.erase(test,a.size());
+    }
 
-        size_t t = test.find("test");
-            if(t != string::npos){
-                test.erase(t, 4);	 
-            }
+    size_t brac_open = user_input.find("[");
+    if(brac_open != string::npos){
+        user_input.erase(brac_open,1);
+
+    size_t brac_close = user_input.find("]");
+    if(brac_close != string::npos){
+        user_input.erase(brac_close,1);
+    }
+    else {
+      cout << "command invalid";
+      }
+    }
+flags(user_input);
+}
+
+void flags(string& user_input) {
+
+bool flag_e = false;
+bool flag_f = false;
+bool flag_d = false;
+
+size_t e = user_input.find("-e");
+size_t f = user_input.find("-f");
+size_t d = user_input.find("-d");
+
+struct stat flg;
+
+
+if (e != string::npos) {
+user_input.erase(e,2);
+flag_e = !flag_e;
+//cout << "(" <<flag_e<<")";
+ }
+else if (f != string::npos) {
+user_input.erase(f,2);
+flag_f = !flag_f;
+//cout << "(" <<flag_f<<")";
+ }
+else if(d != string::npos) {
+user_input.erase(d,2);
+flag_d = !flag_d;
+//cout << "(" <<flag_d<<")";
+ }
+else {
+flag_e = !flag_e;
+//cout << "(" <<flag_e<<")";
+ }
+
+if ((flag_e && flag_f) || (flag_e && flag_d) || (flag_f && flag_d) ) {
+cout << "too many flags";
+}
+
+
+char * writable = new char[user_input.size() + 1];
+std::copy(user_input.begin(), user_input.end(), writable);
+writable[user_input.size()] = '\0';
 
 
 
+if(flag_e) {
+    if(stat(writable,&flg) == 0 ) {
+        cout << "(TRUE)" ;
+        }
+    else {
+        cout << "(False)" ;
+    }
+}
+else if (flag_f) {
+    if(stat(writable,&flg) == 0 && S_ISREG(flg.st_mode)) {
+        cout << "(" <<flag_f << ")" ;
+        }
+    else {
+        cout << "(False)" ;
+        }
+    }
+else if (flag_d) {
+    if(stat(writable, & flg) == 0 && S_ISDIR(flg.st_mode)){
+        cout << "(" <<flag_d << ")" ;
+        }
+    else {
+        cout << "(False)" ;
+        }
+    }
 }
 
 
