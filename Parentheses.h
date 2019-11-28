@@ -40,8 +40,10 @@ int main() {
                 leftStack.push(temp);
                 temp = "";
             // else we have ')('. Nothing really happens so we just save '(' as our prevOp     
-            }else
+            }else{
                 prevOp = s[i];
+		temp = "";
+ 	    }
         }
         
         
@@ -58,29 +60,33 @@ int main() {
              }else if(s[i] == ')' && s[i-1] == ')') {
                 cout << "Two right in a row" << endl;
                 rightStack.push("Clear");
-                
+		// if our leftStack is not empty then we push the command we passed earlier
+		// ex: (--push this--(-----))
+                if(!leftStack.empty()){
+                    commands.push_back(leftStack.top());
+                    leftStack.pop();
+		    prevOp = s[i];
+                }else {
+		    prevOp = s[i];
+                    rightStack.push("Clear");
             } else{
-                
-            }
-            
+                temp += s[i];
+            }   
         }
-        
         else
-            temp += s[i];
-        
+            temp += s[i];       
     }
     
-    cout << "LS:" << leftStack.size() << "   RS: " << rightStack.size() << endl;
+ 
     
-    
+    // This will check we have any commands left in our stacks that we need to finish pushing 
+    // to our command vector
+    // Run while our stacks are not empty
     while(!leftStack.empty() || !rightStack.empty()){
         if(!leftStack.empty() && rightStack.empty()){
-            cout << "1." << leftStack.top() << endl;
             commands.push_back(leftStack.top());
             leftStack.pop();
-            
         } else if(leftStack.empty() && !rightStack.empty()){
-            cout << "2." << rightStack.top() << endl;
             commands.push_back(rightStack.top());
             rightStack.pop();
         } else{
@@ -104,13 +110,9 @@ int main() {
         }
     }
     
-    cout << commands.size() << endl;
-    
     vector<string>::iterator i;
     for(i = commands.begin(); i != commands.end(); i++){
-        cout << *i << endl;
-        
-        
+        cout << *i << endl;   
     }
     
         
