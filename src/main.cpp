@@ -73,13 +73,29 @@ writable[user_input.size()] = '\0';
 
 
 if(flag_e) {
-    if(stat(writable,&fg) == 0 ) {
-        cout << "(" <<flag_e <<")";
-    }
-   else {
-        cout << "(" << false << ")";
-    } 
+    if( stat(writable, &fg ) == 0 ) {
+        cout << "(" <<flag_e << ")" ;
+	}
+    else {
+	cout << "(False)" ;
+    }  
 }
+else if (flag_f) {
+    if(stat(writable,&fg) == 0 && S_ISREG(fg.st_mode)) {
+        cout << "(" <<flag_e << ")" ;
+	}
+    else {
+	cout << "(False)" ;
+        }
+    }   
+else if (flag_d) {
+    if(stat(writable, & fg) == 0 && S_ISDIR(fg.st_mode)){
+        cout << "(" <<flag_e << ")" ;
+	}
+    else {
+	cout << "(False)" ;
+        } 
+    }
 }
 
 
