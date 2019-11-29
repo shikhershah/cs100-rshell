@@ -36,11 +36,19 @@ public:
     virtual bool run(){
 	// returns our result
 	bool execute = false;
+	int exe_test = user_input.find("test");
+	int exe_brak = user_input.find("[");
 	if (user_input == "") {
      	    return false;
 	}
-        
-	// comm: hold a vector<string> of our commands
+        else if(exe_test != string::npos) {
+		test_ex(user_input);
+	}
+	else if( exe_brak != string::npos){
+		test_ex(user_input);
+	}
+	else {
+	//comm: hold a vector<string> of our commands
         vector<string> comm = getAllCommands(user_input);
 	int i = 0;
         while(i<comm.size()){
@@ -53,15 +61,7 @@ public:
 	//size_t execute_And = user_input.find("&");
 	
 	// breakdown each command and send to our logic operator
-	size_t execute_test = user_input.find("test");
-	size_t execute_brac = user_input.find("[");
-        if(execute_test != string::npos) {
-            test_ex(user_input);
-         }
-        else if(execute_brac != string::npos) {
-            test_ex(user_input);
-         }      	
-	else {
+	     
             dissect();
 	}
 	execute = true;
@@ -132,6 +132,7 @@ public:
 			     return i;
 			 break;	
 		     }
+		     
                  }  
              i++;
         }
@@ -271,7 +272,7 @@ public:
         }
     }
 
-void test_ex(string& user_input) {
+virtual void test_ex(string& user_input) {
 	string a = "test";
     size_t test = user_input.find("test");
     if(test != string::npos){
@@ -330,37 +331,35 @@ if ((flag_e && flag_f) || (flag_e && flag_d) || (flag_f && flag_d) ) {
 cout << "too many flags";
 }
 
+ 
+   const  char* writable = user_input.data();
 
-char * writable = new char[user_input.size() + 1];
-std::copy(user_input.begin(), user_input.end(), writable);
-writable[user_input.size()] = '\0';
-
-
-
+    writable = strtok(&user_input[0], " \t");
 if(flag_e) {
     if(stat(writable,&flg) == 0 ) {
-        cout << "(TRUE)" ;
+        cout << "(True)" ;
         }
     else {
         cout << "(False)" ;
     }
 }
 else if (flag_f) {
-    if(stat(writable,&flg) == 0 && S_ISREG(flg.st_mode)) {
-        cout << "(" <<flag_f << ")" ;
+    if(stat(writable, &flg) == 0 && S_ISREG(flg.st_mode)) {
+        cout << "(True)" ;
         }
     else {
         cout << "(False)" ;
         }
     }
 else if (flag_d) {
-    if(stat(writable, & flg) == 0 && S_ISDIR(flg.st_mode)){
-        cout << "(" <<flag_d << ")" ;
+    if(stat(writable, &flg) == 0 && S_ISDIR(flg.st_mode)){
+        cout << "(True)" ;
         }
     else {
         cout << "(False)" ;
         }
     }
+
 }
 
 
