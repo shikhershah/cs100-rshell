@@ -18,7 +18,9 @@ int main() {
     string temp = "";
     // this will hold a vector of our commands in order of precedence
     vector<string> commands;
-    
+   
+    cout << s << endl;
+ 
     // Loop through our string until checking each character looking for '(' and ')' to determine 
     // what our parentheses contain and order of precedence
     for(int i =0; i<s.length(); i++){
@@ -31,7 +33,6 @@ int main() {
 	    // will work as a placeholder to let us know we pushed a blank space. I will cover more on this later. 
             else if(s[i] == '(' && s[i-1] == '('){
 		prevOp = s[i];
-                cout << "Two in left in a row" << endl;
                 leftStack.push("Clear");
                 temp = "";
 	    // If not two in a row, then we must have something like (ls -a(echo hello)). We will push ls -a to our leftStack
@@ -60,7 +61,6 @@ int main() {
                 commands.push_back(temp);
                 temp = "";
             }else if(s[i] == ')' && s[i-1] == ')') {
-                cout << "Two right in a row" << endl;
                 rightStack.push("Clear");
 		// if our leftStack is not empty then we push the command we passed earlier
 		// ex: (--push this--(-----))
@@ -123,10 +123,9 @@ int main() {
                 leftStack.pop();
                 rightStack.pop();
 	    // else both stacks do not contain "Clear"
-	    // Ex: (--something--(...)--something--)
+	    // Ex: (--leftStack--(...)--rightStack--)
             } else{
                 temp = leftStack.top() + rightStack.top();
-                cout << "Temp: " << temp << endl;
                 commands.push_back(temp);
                 leftStack.pop();
                 rightStack.pop();
