@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -178,19 +179,157 @@ public:
     }
 
 
+
+
+    vector<string> parentheses(string s){
+        stack<string> leftStack;
+        stack<string> rightStack;
+        string prevOp = "";
+        string temp = "";
+        vector<string> commands;
+    
+    
+        for(int i =0; i<s.length(); i++){
+
+            if(s[i] == '('){
+                if(prevOp == ""){
+                    prevOp = s[i];
+                } 
+                else if(s[i] == '(' && s[i-1] == '('){
+                    if(s[i-1] == '('){
+                        prevOp = s[i];
+                        leftStack.push("Clear");
+                        temp = "";}
+                }
+            
+                else if(s[i] == '('){
+                    prevOp = s[i];
+                    leftStack.push(temp);
+                    temp = "";
+                }
+            
+                else{
+                    prevOp = s[i];
+                    temp = "";
+                }
+            }
+            else if(s[i] == ')'){
+                if(prevOp == ""){
+                    cout << "Error: no left paren";
+                    break;
+                }
+                else if(prevOp == "("){
+                    prevOp = s[i];
+                    commands.push_back(temp);
+                    temp = "";
+                
+                }else if(s[i] == ')' && s[i-1] == ')') {
+               
+                    if(!leftStack.empty()){   
+                        commands.push_back(leftStack.top());
+                        leftStack.pop();
+                        prevOp = s[i];
+                    } else{
+                        prevOp = s[i];
+                        rightStack.push("Clear");
+                    }
+                
+                } else if(s[i] == ')'){
+                    prevOp = s[i];
+                    rightStack.push(temp);
+                    temp = "";
+                }
+            } else
+                temp += s[i];
+        }
+    
+    
+        while(!leftStack.empty() || !rightStack.empty()){
+            if(!leftStack.empty() && rightStack.empty()){
+                if(leftStack.top() == "Clear")
+                    leftStack.pop();
+                else{
+                    commands.push_back(leftStack.top());
+                    leftStack.pop();
+                }
+            } else if(leftStack.empty() && !rightStack.empty()){
+                if(rightStack.top() == "Clear")
+                    rightStack.pop();
+                else{
+                    commands.push_back(rightStack.top());
+                    rightStack.pop();
+                }
+            } else{
+                if(leftStack.top() == "Clear" && rightStack.top() == "Clear"){
+                    leftStack.pop();
+                    rightStack.pop();
+                }else if(leftStack.top() == "Clear" && rightStack.top() != "Clear"){
+                    temp = rightStack.top();
+                    commands.push_back(temp);
+                    leftStack.pop();
+                    rightStack.pop();
+                } else if(leftStack.top() != "Clear" && rightStack.top() == "Clear"){
+                    temp = leftStack.top();
+                    commands.push_back(temp);
+                    leftStack.pop();
+                    rightStack.pop();
+               } else{
+                    temp = leftStack.top() + rightStack.top();
+                    cout << "Temp: " << temp << endl;
+                    commands.push_back(temp);
+                    leftStack.pop();
+                    rightStack.pop();
+               }
+            }
+        }   
+    
+
+
+        return commands;
+    }
+
     // dissect() will iterate through our vector that contains strings of our commands
     // 
     virtual void dissect(){
+	vector<string> pCommands;
 	// reset our variables after iteration to avoid carrying over results from a previous iteration
         for(int i=0;i<commands.size(); i++){
             test = commands[i];
-            holdString = test;
+	    pCommands = parentheses(test);
+            //holdString = test;
             string firstCommand = "";
             string secondCommand = "";
-            currOpIndex = 0;  
-            prevOpIndex = -1; 
-            
-            // test: this tell use our current commands[i]
+            //currOpIndex = 0;  
+            //prevOpIndex = -1; 
+  
+
+	    if(pCommands.size() == 1){
+		firstCommand = pCommands[0];
+		SingleCommand S(firstCommand, secondCommand);
+		S.run();	
+	    }else{
+		for(int j =1; j <pCommands.size(); j+2){
+	            if(pCommands[j] == "&&"){
+                        firstCommand = pCommands[j-1];
+			secondCommand = pCommands[j+1];
+			AndLogicOp A(firstCommand, secondCommand);
+			A.run();   
+                    }else if(pCommands[j] == "||"){
+		        firstCommand = pCommands[j-1];
+                        secondCommand = pCommands[j+1];
+                        OrLogicOp O(firstCommand, secondCommand);
+                        O.run();
+		    } else {
+		        firstCommand = pCommands[0];
+                        SingleCommand S(firstCommand, secondCommand);
+                        S.run();
+		    }
+                      
+                }
+	    }
+	}
+    }
+/*            // test: this tell use our current commands[i]
             //cout << "*******[" << i <<"]*******" << endl;
             //cout << "Current Command: " << test << endl;
             
@@ -229,7 +368,7 @@ public:
                 }
                 // if we only have one command in our string, call SingleCommand to check if it will execute
           //      fork();
-              /*   char** args;
+             //   char** args;
                  pid_t pid = fork();
                   int status;
              
@@ -249,7 +388,7 @@ public:
                 if(pid > 0)
                    waitpid(-1, &pid, 0);
                    cout << "Parent: " << pid << endl;
-*/
+
 		if(secondCommand.empty() && currOpIndex == test.length()){
                     SingleCommand S(firstCommand, secondCommand);
                     S.run();
@@ -271,7 +410,7 @@ public:
 	    
         }
     }
-
+*/
 virtual void test_ex(string& user_input) {
 	string a = "test";
     size_t test = user_input.find("test");
@@ -332,9 +471,9 @@ cout << "too many flags";
 }
 
  
-   const  char* writable = user_input.data();
+const  char* writable = user_input.data();
+writable = strtok(&user_input[0], " \t");
 
-    writable = strtok(&user_input[0], " \t");
 if(flag_e) {
     if(stat(writable,&flg) == 0 ) {
         cout << "(True)" ;
