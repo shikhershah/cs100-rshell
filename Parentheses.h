@@ -30,12 +30,14 @@ int main() {
 	    // Check if we have two parentheses in a row, then push the word clear to our leftStack. The string "Clear
 	    // will work as a placeholder to let us know we pushed a blank space. I will cover more on this later. 
             else if(s[i] == '(' && s[i-1] == '('){
+		prevOp = s[i];
                 cout << "Two in left in a row" << endl;
                 leftStack.push("Clear");
                 temp = "";
 	    // If not two in a row, then we must have something like (ls -a(echo hello)). We will push ls -a to our leftStack
  	    // and save it for later. 
             }else if(s[i] == '('){
+		prevOp = s[i];
                 cout << "LeftStack: " << temp << endl;
                 leftStack.push(temp);
                 temp = "";
@@ -46,7 +48,7 @@ int main() {
  	    }
         }
         
-        
+        // if we encounter a ')'   
         else if(s[i] == ')'){
             if(prevOp == ""){
                 cout << "Error: no left paren";
@@ -57,7 +59,7 @@ int main() {
                 cout << "New Command: " << temp << endl;
                 commands.push_back(temp);
                 temp = "";
-             }else if(s[i] == ')' && s[i-1] == ')') {
+            }else if(s[i] == ')' && s[i-1] == ')') {
                 cout << "Two right in a row" << endl;
                 rightStack.push("Clear");
 		// if our leftStack is not empty then we push the command we passed earlier
@@ -66,14 +68,17 @@ int main() {
                     commands.push_back(leftStack.top());
                     leftStack.pop();
 		    prevOp = s[i];
-                }else {
+		}else{
 		    prevOp = s[i];
                     rightStack.push("Clear");
+                }
+	    }else if(s[i] == ')'){
+		    prevOp = s[i];
+                    rightStack.push(temp);
             } else{
                 temp += s[i];
             }   
-        }
-        else
+        }else
             temp += s[i];       
     }
     
@@ -83,25 +88,45 @@ int main() {
     // to our command vector
     // Run while our stacks are not empty
     while(!leftStack.empty() || !rightStack.empty()){
+	// if leftStack not empty and rightStack is, then make sure we don't push "Clear" to our stack
         if(!leftStack.empty() && rightStack.empty()){
-            commands.push_back(leftStack.top());
-            leftStack.pop();
+            if(leftStack.top() == "Clear")
+                leftStack.pop();
+            else{
+                commands.push_back(leftStack.top());
+                leftStack.pop();
+            }
+	// if leftStack empty and rightStack is not, then make sure we don't push "Clear" to our stack
         } else if(leftStack.empty() && !rightStack.empty()){
-            commands.push_back(rightStack.top());
-            rightStack.pop();
+            if(rightStack.top() == "Clear")
+                rightStack.pop();
+            else{
+                commands.push_back(rightStack.top());
+                rightStack.pop();
+            }
+        // else both of our stacks are not empty
         } else{
-            if(rightStack.top() == "Clear"){
-                temp = leftStack.top();
-                commands.push_back(temp);
+	    // if both our stack tops hold "Clear" then pop both
+            if(leftStack.top() == "Clear" && rightStack.top() == "Clear"){
                 leftStack.pop();
                 rightStack.pop();
-            } else if(leftStack.top() == "Clear"){
+	    // if our leftStack.top holds clear and rightStack doesn't, then pop left and push right to our vector command
+            }else if(leftStack.top() == "Clear" && rightStack.top() != "Clear"){
                 temp = rightStack.top();
                 commands.push_back(temp);
                 leftStack.pop();
                 rightStack.pop();
+	    //  if our leftStack.top does not hold "Clear" and rightStack does, then push left to our command vector and pop rightStack
+            } else if(leftStack.top() != "Clear" && rightStack.top() == "Clear"){
+                temp = leftStack.top();
+                commands.push_back(temp);
+                leftStack.pop();
+                rightStack.pop();
+	    // else both stacks do not contain "Clear"
+	    // Ex: (--something--(...)--something--)
             } else{
                 temp = leftStack.top() + rightStack.top();
+                cout << "Temp: " << temp << endl;
                 commands.push_back(temp);
                 leftStack.pop();
                 rightStack.pop();
@@ -110,6 +135,7 @@ int main() {
         }
     }
     
+    // Print out our commands in order of precedence
     vector<string>::iterator i;
     for(i = commands.begin(); i != commands.end(); i++){
         cout << *i << endl;   
