@@ -16,15 +16,28 @@ public:
         if(firstCommand.empty())
             return false;
 	else{
+
 	    // test to make sure it works using the forks or execs
 	    char * args[3];
-            string one = "ls";
-            string two = "-a";
-            args[0] = (char*)one.c_str();
-            args[1] = (char*)two.c_str();
-            args[2] = NULL;
+	
+	
+	    int strlen = firstCommand.length();
+	    char strchar[strlen+1];
+   	    strcpy(strchar, firstCommand.c_str());
+
+	    int i = 0;
+    	    char *comm = strtok (strchar, " ");
+	    
+    	    while (comm != NULL) {
+        	args[i++] = comm;
+        	comm = strtok (NULL, " ");
+    	    }
+
+	    args[2] = NULL;
             
             execute(args);
+
+	    
 
         }   
         return true;
@@ -32,25 +45,33 @@ public:
     
 
     void execute(char ** args){
-        pid_t pid = fork();
-        int status;
+        pid_t parent_pid;
+	pid_t pid = fork();
+        
 
         if(pid < 0){
             cout << "Error: fork() == -1" << endl;
             exit(1);
         }
-        if(pid == 0){
-            cout << "Child: " << pid << endl;
-            if(execvp(args[0], args) ==-1){
+        else if(pid == 0){
+    	    if((strcmp(args[0], "exit") == 0) || (strcmp(args[0], "Exit") == 0)){
+        	cout << "Exit";
+        	exit(1);
+    	    }
+	    else if((strcmp(args[0], "exit") == 0) || (strcmp(args[0], "Exit") == 0)){
+                cout << "Exit";
+                exit(1);
+            }
+            else if(execvp(args[0], args) ==-1){
                 cout << "Error" << endl;
                 exit(1);
             }
         }
 
-        if(pid > 0)
+        else if(parent_pid > 0){
             waitpid(-1, &pid, 0);
-        cout << "Parent: " << pid << endl;
-
+            
+	}
 
     }
 

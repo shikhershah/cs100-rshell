@@ -2,7 +2,8 @@
 #define _Parser_h
 
 #include <iostream>
-#include <string>
+#include <string.h>
+#include <stdio.h>
 #include <vector>
 #include <stack>
 #include <unistd.h>
@@ -36,7 +37,6 @@ public:
     // Make sure we can execute run() successfully
     virtual bool run(){
 	// returns our result
-	bool execute = false;
 	int exe_test = user_input.find("test");
 	int exe_brak = user_input.find("[");
 	if (user_input == "") {
@@ -63,11 +63,11 @@ public:
 	
 	// breakdown each command and send to our logic operator
 	     
-            dissect();
+        dissect();
 	}
-	execute = true;
-	return execute;
-     }
+	
+	return true;
+    }
 
 
     vector<string> getAllCommands(string user_input){
@@ -119,7 +119,6 @@ public:
                              return i;
                          break;
                      } 
-                     // if s[i] == |
                      case '|':
                      {
                          // Make sure it's not inside open quotes, if not then return index i
@@ -327,7 +326,9 @@ public:
                       
                 }
 	    }
+	
 	}
+	exit(1);
     }
 /*            // test: this tell use our current commands[i]
             //cout << "*******[" << i <<"]*******" << endl;
@@ -402,6 +403,7 @@ public:
                     OrLogicOp O(firstCommand,secondCommand);
                     O.run();
                 }
+	//	wait(11);		
 	//	wait(11);		
             // test: this will print our current commands
             // print(firstCommand, secondCommand);
