@@ -132,7 +132,16 @@ public:
 			     return i;
 			 break;	
 		     }
-		     
+		    case '<':{
+			if(!openQ) 
+			     return i;
+			break;
+		     }
+		    case '>':{
+			if(!openQ)
+			     return i;
+			break;
+		     } 	     
                  }  
              i++;
         }
@@ -150,12 +159,22 @@ public:
    	    // Look for logic op, if none found return string 
             if(currOpIndex < test.length()){ 
                 char letterOrOP = test.at(currOpIndex);
-                if(letterOrOP == '&' && test.at(currOpIndex+1) == '&')
+                if(letterOrOP == '&' && test.at(currOpIndex+1) == '&') //and
                     return test.substr(0, currOpIndex);
-                else if(letterOrOP == '|' && test.at(currOpIndex+1) == '|')
+		 else if(letterOrOP == '|') //pipe
                     return test.substr(0, currOpIndex);
-		else if (test.at(currOpIndex)  == '#'    )
+                else if(letterOrOP == '|' && test.at(currOpIndex+1) == '|') //or
+                    return test.substr(0, currOpIndex);
+		else if (letterOrOp  == '#')
 		    return test.substr(0,currOpIndex);
+		else if(letterOrOP == '>') // override
+                    return test.substr(0, currOpIndex);
+		else if(test.at(letterOrOp == '>') &&   test.at(currOpIndex+1 == '>') ) // append
+		    return test.substr(0,currOpIndex);
+		 else if(letterOrOP == '<') //input redirect
+                    return test.substr(0, currOpIndex);
+		 else if(letterOrOP == '#') //hash
+                    return test.substr(0, currOpIndex);
                 else
                     return test.substr(prevOpIndex,test.length());
             }
@@ -168,12 +187,22 @@ public:
                     return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
                 else if(letterOrOP == '|' && test.at(currOpIndex+1) == '|')
                     return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
-                else
+               else if(letterOrOP == '|') //pipe
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
+		else if(letterOrOP == '>') //override
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
+		else if(letterOrOP == '>' && test.at(currOpIndex+1) == '>')//append
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
+		else if(letterOrOP == '<') // input redirect
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
+	        else if(letterOrOP == '#') //hash
+                    return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
+	        else
                     return test.substr(prevOpIndex, currOpIndex-prevOpIndex);
             } else if(currOpIndex == test.length())
                 return  test.substr(prevOpIndex,test.length());
             
-        }
+        }	
         return test.substr(prevOpIndex,test.length());
     }
 
