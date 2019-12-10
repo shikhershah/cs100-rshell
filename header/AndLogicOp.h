@@ -15,12 +15,10 @@ public:
     }
     
     virtual bool run(){
-	if(firstCommand.empty() || secondCommand.empty())
-            return false;
-        else{
+	if(!firstCommand.empty() || !secondCommand.empty()){
+            
 	    // create a char of our commands with NULL at the end
 	    char * args[3];
-	    
 
 	    int strlen = firstCommand.length();
             char strchar[strlen+1];
@@ -46,8 +44,9 @@ public:
 
 
 	    // *** check if our commands are valid using the forks and stuff method *****	
+	    return true;
 	}
-	return true;
+	return false;
     }
 
     

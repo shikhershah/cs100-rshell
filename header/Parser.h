@@ -165,11 +165,11 @@ public:
                     return test.substr(0, currOpIndex);
                 else if(letterOrOP == '|' && test.at(currOpIndex+1) == '|') //or
                     return test.substr(0, currOpIndex);
-		else if (letterOrOp  == '#')
+		else if (letterOrOP  == '#')
 		    return test.substr(0,currOpIndex);
 		else if(letterOrOP == '>') // override
                     return test.substr(0, currOpIndex);
-		else if(test.at(letterOrOp == '>') &&   test.at(currOpIndex+1 == '>') ) // append
+		else if(test.at(letterOrOP == '>') &&   test.at(currOpIndex+1 == '>') ) // append
 		    return test.substr(0,currOpIndex);
 		 else if(letterOrOP == '<') //input redirect
                     return test.substr(0, currOpIndex);
@@ -208,13 +208,15 @@ public:
 
 
 
-
+    // This will break down our string that contain commnands
+    // inside and outside of  parenthesis
     vector<string> parentheses(string s){
         stack<string> leftStack;
         stack<string> rightStack;
         string prevOp = "";
         string temp = "";
         vector<string> commands;
+	vector<string> nonParenthComm; // commands outside of the parenthesis
     
     
         for(int i =0; i<s.length(); i++){
@@ -222,6 +224,12 @@ public:
             if(s[i] == '('){
                 if(prevOp == ""){
                     prevOp = s[i];
+		    // Check to see if temp holds a command right now,
+		    // if so push to nonParenthComm
+		    if(!temp.empty()){
+                    nonParenthComm.push_back(temp);
+                    temp = "";
+                }
                 } 
                 else if(s[i] == '(' && s[i-1] == '('){
                     if(s[i-1] == '('){
@@ -310,10 +318,16 @@ public:
                }
             }
         }   
-    
+        // Before we return all of our commands check to see if we have any commands left in temp
+	if(!temp.empty())
+            nonParenthComm.push_back(temp);
 
-
-        return commands;
+	// Combine commands and nonParenthComm by inserting nonParenth to the end of commands
+	vector<string> allCommands;
+        allCommands.insert( allCommands.end(), commands.begin(), commands.end() );
+        allCommands.insert( allCommands.end(), nonParenthComm.begin(), nonParenthComm.end() );
+        
+	return allCommands;
     }
 
     // dissect() will iterate through our vector that contains strings of our commands

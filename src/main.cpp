@@ -24,11 +24,11 @@ int main() {
 
    // Base *p = new Parser(user_input);
    //     cout << p->run(); 
- size_t comment = user_input.find("#");
+ /*size_t comment = user_input.find("#");
      if(comment != string::npos){
         user_input.erase(comment,user_input.size()-1);
   }
-
+*/
 Base* p =new  Parser (user_input);
 	cout <<p->run();  
    
