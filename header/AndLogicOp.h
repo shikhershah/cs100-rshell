@@ -39,10 +39,26 @@ public:
 
 	    // execute the second command if the first passes
 	    
+	    // test to test second comm
+	    strlen = secondCommand.length();
+            strchar[strlen+1];
+            strcpy(strchar, secondCommand.c_str());
+
+            i = 0;
+            char *comm1 = strtok (strchar, " ");
+
+            while (comm1 != NULL) {
+                args[i++] = comm1;
+                comm1 = strtok (NULL, " ");
+            }
+
+            args[2] = NULL;
 
 
+            execute(args);
 
 
+	    cout << "End";
 	    // *** check if our commands are valid using the forks and stuff method *****	
 	    return true;
 	}

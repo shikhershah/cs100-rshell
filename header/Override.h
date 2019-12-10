@@ -35,7 +35,7 @@ public:
             args[2] = NULL;
             
 	    // test: remove cout<<
-            cout << execute(args);
+            execute(args);
 	    // execute the second command if the first passes
 	    
 	    
