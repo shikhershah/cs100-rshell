@@ -348,7 +348,8 @@ public:
 	    if(pCommands.size() == 1){
 		firstCommand = pCommands[0];
 		SingleCommand S(firstCommand, secondCommand);
-		S.run();	
+		// test: cout << 
+		cout << S.run();	
 	    }else{
 		for(int j =1; j <pCommands.size(); j+2){
 	            if(pCommands[j] == "&&"){

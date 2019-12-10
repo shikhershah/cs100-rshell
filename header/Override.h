@@ -15,15 +15,10 @@ public:
     }
     
     virtual bool run(){
-	if(firstCommand.empty() || secondCommand.empty())
-            return false;
-        else{
+	if(!firstCommand.empty() || !secondCommand.empty())
+            
 	    // create a char of our commands with NULL at the end
-
-
-
 	     char * args[3];
-	    
 
 	    int strlen = firstCommand.length();
             char strchar[strlen+1];
@@ -39,24 +34,21 @@ public:
         
             args[2] = NULL;
             
-            execute(args);
+	    // test: remove cout<<
+            cout << execute(args);
 	    // execute the second command if the first passes
 	    
 	    
 
 	   // *** check if our commands are valid using the forks and stuff method *****	
-	   
-	  
-	   
-	   
-	   
-	   
-	}
-	return true;
+	    
+	    return true;
+	} else 
+	    return false;
     }
 
-    
-    void execute(char ** args){
+    // test: bool?
+    bool execute(char ** args){
         pid_t pid = fork();
         int status;
         

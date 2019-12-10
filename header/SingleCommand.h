@@ -13,9 +13,7 @@ public:
     }
     
     virtual bool run(){
-        if(firstCommand.empty())
-            return false;
-	else{
+        if(!firstCommand.empty()){
 
 	    // test to make sure it works using the forks or execs
 	    char * args[3];
@@ -37,10 +35,10 @@ public:
             
             execute(args);
 
-	    
+	    return true;
 
-        }   
-        return true;
+        } else    
+            return false;
     }
     
 
