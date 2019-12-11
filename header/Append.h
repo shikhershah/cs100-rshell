@@ -15,9 +15,8 @@ public:
     }
 
     virtual bool run(){
-        if(firstCommand.empty() || secondCommand.empty())
-            return false;
-        else{
+        if(firstCommand.empty() || secondCommand.empty()){
+           
 	    // create a char of our commands with NULL at the end
 	     char * args[3];
 
@@ -39,17 +38,28 @@ public:
             execute(args);
 	    
 	     // execute the second command if the first passes
-	  
-
-
-
+	  int orig = open(strchar, O_WRONLY | O_APPEND); 
+      /*
+          if(file_desc < 0) {
+             printf("Error opening the file\n"); 
+	  }
+*/
+	int copy = dup(orig);
 
 	     // *** check if our commands are valid using the forks and stuff method *****       
 
+		// write the dupclicate to file to append
+	write(copy,comm,strlen);
+	// if (pipe(args) < 0  ){
+                //  exit(1);
+              //  } 
+            // write(args[1], comm, strlen);
+          //   read(args[0], strchar, strlen);
 
-
-	    }
-	return true;
+	    
+	    return true;
+	} else 
+	    return false;
     }
 
     

@@ -5,6 +5,9 @@
 #include <iostream>
 #include <string>
 #include "Base.h"
+
+
+#define MSGSIZE 16
 using namespace std;
 
 
@@ -16,10 +19,23 @@ public:
     }
     
     virtual bool run(){
-	if(!firstCommand.empty() || !secondCommand.empty())
+	if(!firstCommand.empty() ){
             
 	    // create a char of our commands with NULL at the end
-	     char * args[3];
+	    char * args[3];
+//		args[2] = "HI";	     
+            
+	    int p[2]; 
+  
+   	    if (pipe(p) < 0){ 
+                exit(1); 
+ 	    }
+   	    write(p[1], args[2], MSGSIZE); 
+  
+    
+        // read pipe */
+            read(p[0], args, MSGSIZE); 
+       
 
 	    int strlen = firstCommand.length();
             char strchar[strlen+1];
@@ -32,19 +48,27 @@ public:
                 args[i++] = comm;
                 comm = strtok (NULL, " ");
             }
-        
+
+                       
             args[2] = NULL;
+	    
+	   for (int i = 0; i < 3; i ++) { 
+	   /* if(args[i] == ">") {
+		 int p[2];
 
-            
-
-//           if (pipe(args) < 0  ){
-//		  exit(1);
-//        	} 
-//             write(args[1],strchar, strlen);
-//             read(args[0], comm, strlen);
+            if (pipe(p) < 0){
+                exit(1);
+            }
+            write(p[1], args[2], MSGSIZE);
 
 
-
+        // read pipe
+            read(p[0], args, MSGSIZE);    
+	   }  */
+		cout << args[i];
+	  }
+	    
+	   
 	    // test: remove cout<<
             execute(args);
 	    // execute the second command if the first passes
@@ -58,12 +82,6 @@ public:
 
 	   // *** check if our commands are valid using the forks and stuff method *****	
 		
-	 if (pipe(args) < 0  ){
-                  exit(1);
-                } 
-             write(args[1], comm, strlen);
-             read(args[0], strchar, strlen);
-
 	    
 	    return true;
 	} else 

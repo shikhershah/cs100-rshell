@@ -46,7 +46,9 @@ public:
 	    // execute the second command if the first passes
 	    
 
-
+		for (int i = 0; i < 3; i++ ) {
+			cout << args[i];
+             }
 
 
 	    

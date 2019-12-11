@@ -14,7 +14,7 @@
 #include "OrLogicOp.h"
 #include "SingleCommand.h"
 #include "Redirect.h"
-
+#include "Override.h"
 using namespace std;
 
 
@@ -354,7 +354,15 @@ public:
 		    Redirect R(firstCommand, secondCommand);
 		    R.run();	
 		    // test portion
-		} else {
+		}  
+
+		else if(pCommands[0].find(">" )!= -1) {
+		    cout << "Found > " << endl;
+                    firstCommand = pCommands[0];
+		    Override O (firstCommand, secondCommand);
+ 		    O.run();
+		}	//test 
+		else {
 
 			// orig
 	   	    firstCommand = pCommands[0];
