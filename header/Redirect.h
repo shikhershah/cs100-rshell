@@ -15,12 +15,17 @@ public:
     }
     
     virtual bool run(){
-	if(firstCommand.empty() || secondCommand.empty())
-            return false;
-        else{
+	if(!firstCommand.empty()){
+            
+       
 	    // create a char of our commands with NULL at the end
 	    char * args[3];
+		
+	    int opLocation = firstCommand.find("<");
+	    string temp = firstCommand.substr(opLocation+1, firstCommand.length());
+	    firstCommand = firstCommand.substr(0, opLocation) + temp;    
 	    
+	   // cout << "Redirect: " << firstCommand << endl;
 
 	    int strlen = firstCommand.length();
             char strchar[strlen+1];
@@ -49,9 +54,9 @@ public:
 	    
 	    
 
-
-	   }
-	return true;
+	    return true;	
+        }else
+	    return false;
     }
 
     

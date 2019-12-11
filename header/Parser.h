@@ -13,6 +13,8 @@
 #include "AndLogicOp.h"
 #include "OrLogicOp.h"
 #include "SingleCommand.h"
+#include "Redirect.h"
+
 using namespace std;
 
 
@@ -207,7 +209,6 @@ public:
     }
 
 
-
     // This will break down our string that contain commnands
     // inside and outside of  parenthesis
     vector<string> parentheses(string s){
@@ -338,50 +339,52 @@ public:
         for(int i=0;i<commands.size(); i++){
             test = commands[i];
 	    pCommands = parentheses(test);
-            //holdString = test;
+            holdString = test;
             string firstCommand = "";
             string secondCommand = "";
-            //currOpIndex = 0;  
-            //prevOpIndex = -1; 
+            currOpIndex = 0;  
+            prevOpIndex = -1; 
   
-
+	    //while(currOpIndex < test.length()){
 	    if(pCommands.size() == 1){
-		// test: < 
+		    // test: < 
 		if(pCommands[0].find("<") != -1){
-		    cout << "Found < " << endl;
+	      	    cout << "Found < " << endl;
 		    firstCommand = pCommands[0];
-		    cout << firstCommand << endl;
-		}
+		    Redirect R(firstCommand, secondCommand);
+		    R.run();	
+		    // test portion
+		} else {
 
-		// orig
-		firstCommand = pCommands[0];
-		cout << "First.. " << firstCommand << endl;
-		SingleCommand S(firstCommand, secondCommand);
-		// test: cout << 
-		cout << S.run();	
-	    }else{
-		for(int j =1; j <pCommands.size(); j+2){
-	            if(pCommands[j] == "&&"){
-                        firstCommand = pCommands[j-1];
-			secondCommand = pCommands[j+1];
-			// test:
-			cout << "First: " << firstCommand << "  Second: " << secondCommand << endl;
-			AndLogicOp A(firstCommand, secondCommand);
-			A.run();   
-                    }else if(pCommands[j] == "||"){
-		        firstCommand = pCommands[j-1];
-                        secondCommand = pCommands[j+1];
-                        OrLogicOp O(firstCommand, secondCommand);
-                        O.run();
-		    } else {
-		        firstCommand = pCommands[0];
-                        SingleCommand S(firstCommand, secondCommand);
-                        S.run();
-		    }
-                      
-                }
-	    }
-	
+			// orig
+	   	    firstCommand = pCommands[0];
+	  	    cout << "First.. " << firstCommand << endl;
+		    SingleCommand S(firstCommand, secondCommand);
+		    // test: cout << 
+		    cout << S.run();
+		    	
+	        }
+	     } else{
+		    for(int j =1; j <pCommands.size(); j+2){
+	                if(pCommands[j] == "&&"){
+                       	    firstCommand = pCommands[j-1];
+			    secondCommand = pCommands[j+1];
+			    // test:
+			    cout << "First: " << firstCommand << "  Second: " << secondCommand << endl;
+		 	    AndLogicOp A(firstCommand, secondCommand);
+			    A.run();   
+                        }else if(pCommands[j] == "||"){
+		            firstCommand = pCommands[j-1];
+                            secondCommand = pCommands[j+1];
+                            OrLogicOp O(firstCommand, secondCommand);
+                       	    O.run();
+		  	} else {
+		       	    firstCommand = pCommands[0];
+                            SingleCommand S(firstCommand, secondCommand);
+                       	    S.run();
+		    	}                  
+               	    }
+	        }	
 	}
 	exit(1);
     }
