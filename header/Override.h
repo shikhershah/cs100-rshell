@@ -1,6 +1,7 @@
 #ifndef Override_h
 #define Override_h
 
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include "Base.h"
@@ -33,14 +34,36 @@ public:
             }
         
             args[2] = NULL;
+
             
+
+//           if (pipe(args) < 0  ){
+//		  exit(1);
+//        	} 
+//             write(args[1],strchar, strlen);
+//             read(args[0], comm, strlen);
+
+
+
 	    // test: remove cout<<
             cout << execute(args);
 	    // execute the second command if the first passes
-	    
-	    
+	   	 
+	   // write(args[0], 
+	    // write(args[1], comm, strlen);
+        /* read pipe */
+       	    // read(p[0], strchar, strlen); 
+            // printf("% s\n", inbuf); 
+     
 
 	   // *** check if our commands are valid using the forks and stuff method *****	
+		
+	 if (pipe(args) < 0  ){
+                  exit(1);
+                } 
+             write(args[1], comm, strlen);
+             read(args[0], strchar, strlen);
+
 	    
 	    return true;
 	} else 
