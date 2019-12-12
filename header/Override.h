@@ -20,12 +20,12 @@ public:
     
     virtual bool run(){
 	if(!firstCommand.empty() ){
-            
+//           int i = firstCommand.find(">")  
 	    // create a char of our commands with NULL at the end
 	    char * args[3];
-//		args[2] = "HI";	     
+//	     
             
-	    int p[2]; 
+/*	    int p[2]; 
   
    	    if (pipe(p) < 0){ 
                 exit(1); 
@@ -33,10 +33,15 @@ public:
    	    write(p[1], args[2], MSGSIZE); 
   
     
-        // read pipe */
+        // read pipe 
             read(p[0], args, MSGSIZE); 
-       
+       */
 
+	cout << firstCommand << endl; // see what firstCOmmand is;
+	     //int opLocation = firstCommand.find(">");
+	   // string temp = firstCommand.substr(opLocation+1, firstCommand.length());
+	  //  firstCommand = firstCommand.substr(0, opLocation) + temp;    
+	//		cout << firstCommand<<endl ;
 	    int strlen = firstCommand.length();
             char strchar[strlen+1];
             strcpy(strchar, firstCommand.c_str());
@@ -48,37 +53,32 @@ public:
                 args[i++] = comm;
                 comm = strtok (NULL, " ");
             }
-
-                       
-            args[2] = NULL;
-	    
-	   for (int i = 0; i < 3; i ++) { 
-	   /* if(args[i] == ">") {
+	
+       	//		args[3] = args[1];                
+           args[4] = NULL;  //changed from args[2] = NULL
+		//test
+		  for (int i = 0; i < 4 ; i++) {
+        cout <<i << ":"<< args[i] <<endl;
+        }
 		 int p[2];
 
             if (pipe(p) < 0){
                 exit(1);
             }
-            write(p[1], args[2], MSGSIZE);
-
+            write(p[1], args[1], MSGSIZE);
+	//cout <<args[1];
 
         // read pipe
-            read(p[0], args, MSGSIZE);    
-	   }  */
-		cout << args[i];
-	  }
+            read(p[0], args[3], MSGSIZE);    
 	    
+	//	cout << args[i];
+	   
 	   
 	    // test: remove cout<<
             execute(args);
 	    // execute the second command if the first passes
 	   	 
-	   // write(args[0], 
-	    // write(args[1], comm, strlen);
-        /* read pipe */
-       	    // read(p[0], strchar, strlen); 
-            // printf("% s\n", inbuf); 
-     
+	   
 
 	   // *** check if our commands are valid using the forks and stuff method *****	
 		
@@ -116,8 +116,8 @@ public:
         else if(pid > 0){
             waitpid(-1, &pid, 0);
             cout << "Parent: " << pid << endl;
-	}
-
+	}		//test
+			cout <<secondCommand;
     }
 
     virtual void print(string firstCommand, string secondCommand){   
