@@ -7,6 +7,8 @@
 #include <string>
 #include "Base.h"
 #include <sys/stat.h> 
+#include <fstream>
+#include <cstring>
 
 #define MSGSIZE 16
 using namespace std;
@@ -40,10 +42,15 @@ public:
             args[2] = NULL;
 
 
+	    size_t p = secondCommand.find_first_not_of(" \t");
+	    secondCommand = secondCommand.erase(0,p);
+
 	    int gThan;
-	    gThan = open(secondCommand.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+	    const char *s = secondCommand.c_str();
+	    gThan = open(secondCommand.c_str(), O_WRONLY | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	    
 	    dup2(gThan,1);
+	    
 	    close(gThan);
 
 	    execvp(*args, args);  
