@@ -53,6 +53,13 @@ Base* user_test = new OrLogicOp("ls -a", "");
 EXPECT_EQ(user_test->run(), 0);
 }
 
+TEST(string_test, redirect) {
+Base* user_test = new Redirect("echo < first", "");
+
+EXPECT_EQ(user_test->run(), 0);
+}
+
+
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
