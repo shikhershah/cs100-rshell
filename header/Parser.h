@@ -15,6 +15,7 @@
 #include "SingleCommand.h"
 #include "Redirect.h"
 #include "Override.h"
+#include "Pipe.h"
 using namespace std;
 
 
@@ -344,7 +345,9 @@ public:
             string secondCommand = "";
             currOpIndex = 0;  
             prevOpIndex = -1; 
-  
+            
+	    // for to iterate through loop
+	       
 	    //while(currOpIndex < test.length()){
 	    if(pCommands.size() == 1){
 		    // test: < 
@@ -361,8 +364,17 @@ public:
                     firstCommand = pCommands[0];
 		    Override O (firstCommand, secondCommand);
  		    O.run();
-		}	//test 
-		else {
+		}	//test
+		else if(pCommands[0].find("|" )!= -1) {
+                    cout << "Found | " << endl;
+		    // get op location
+                    int op = test.find("|");
+	     	    firstCommand = test.substr(0,op);
+	            secondCommand = test.substr(op+1, test.length());
+
+                    Pipe P (firstCommand, secondCommand);
+                    P.run(); 
+		}else {
 
 			// orig
 	   	    firstCommand = pCommands[0];

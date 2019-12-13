@@ -15,13 +15,23 @@ public:
     }
     
     virtual bool run(){
-	if(firstCommand.empty() || secondCommand.empty())
-            return false;
-        else{
+
+	int pipefd[2];
+        int pid; 
+
+	// create the pipes to write and read input
+	// pid is for our fork	
+	
+	pipe(pipefd);
+	pid = fork();
+
+	if(!firstCommand.empty() || !secondCommand.empty()){
+            
 	    // create a char of our commands with NULL at the end
 	    char * args[3];
-	    
+	    char * args1[3];
 
+	    // put args in executable form
 	    int strlen = firstCommand.length();
             char strchar[strlen+1];
             strcpy(strchar, firstCommand.c_str());
@@ -36,8 +46,32 @@ public:
         
             args[2] = NULL;
             
-            execute(args);
+	    // put args1 in executable form
+	    int strlen1 = firstCommand.length();
+            char strchar1[strlen1+1];
+            strcpy(strchar1, secondCommand.c_str());
 
+            i = 0;
+            char *comm1 = strtok (strchar1, " ");
+
+            while (comm1 != NULL) {
+                args1[i++] = comm1;
+                comm1 = strtok (NULL, " ");
+            }
+            args1[2] = NULL;
+
+	   // check if this is a child
+           if(pid ==0){
+	 	// first execute the second command, args1
+	        dup2(pipefd[0], 0);
+	        close(pipefd[1]);
+	        execvp(*args1,args1);
+	   } else {
+		// now execute first command, args
+		dup2(pipefd[1], 1);
+	 	close(pipefd[0]);
+		execvp(*args, args);
+	   }
 
 	      // execute the second command if the first passes
 	   
@@ -45,13 +79,13 @@ public:
 
 	       // *** check if our commands are valid using the forks and stuff method *****	
 	       
-
-	      }
-	return true;
+	    return true;
+	}
+	return false;
     }
 
     
-    void execute(char ** args){
+    void execute(char ** args, char ** args1){
         pid_t pid = fork();
         int status;
         
