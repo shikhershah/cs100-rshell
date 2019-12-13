@@ -41,7 +41,7 @@ public:
 
             args[2] = NULL;
 
-
+	    // get rid of leading white spaces so we don't add them to our file name
 	    size_t p = secondCommand.find_first_not_of(" \t");
 	    secondCommand = secondCommand.erase(0,p);
 
