@@ -1,11 +1,12 @@
 #ifndef Override_h
 #define Override_h
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include "Base.h"
-
+#include <sys/stat.h> 
 
 #define MSGSIZE 16
 using namespace std;
@@ -19,13 +20,47 @@ public:
     }
     
     virtual bool run(){
-	if(!firstCommand.empty() ){
+	if(!firstCommand.empty() && !secondCommand.empty()){
+	    // <
+
+	    char * args[3];
+
+	    int strlen = firstCommand.length();
+            char strchar[strlen+1];
+            strcpy(strchar, firstCommand.c_str());
+
+            int i = 0;
+            char *comm = strtok (strchar, " ");
+
+            while (comm != NULL) {
+                args[i++] = comm;
+                comm = strtok (NULL, " ");
+            }
+
+            args[2] = NULL;
+
+
+	    int gThan;
+	    gThan = open(secondCommand.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+	    
+	    dup2(gThan,1);
+	    close(gThan);
+
+	    execvp(*args, args);  
+
+
+
+
+
+
+
+	/* 
 //           int i = firstCommand.find(">")  
 	    // create a char of our commands with NULL at the end
 	    char * args[3];
 //	     
             
-/*	    int p[2]; 
+// /star	    int p[2]; 
   
    	    if (pipe(p) < 0){ 
                 exit(1); 
@@ -35,7 +70,7 @@ public:
     
         // read pipe 
             read(p[0], args, MSGSIZE); 
-       */
+  //   strar/
 
 	cout << firstCommand << endl; // see what firstCOmmand is;
 	     //int opLocation = firstCommand.find(">");
@@ -82,7 +117,7 @@ public:
 
 	   // *** check if our commands are valid using the forks and stuff method *****	
 		
-	    
+*/	    
 	    return true;
 	} else 
 	    return false;

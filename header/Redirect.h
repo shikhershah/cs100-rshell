@@ -15,17 +15,14 @@ public:
     }
     
     virtual bool run(){
-	if(!firstCommand.empty()){
+	if(!firstCommand.empty() && !secondCommand.empty()){
             
-       
 	    // create a char of our commands with NULL at the end
 	    char * args[3];
-		
-	    int opLocation = firstCommand.find("<");
-	    string temp = firstCommand.substr(opLocation+1, firstCommand.length());
-	    firstCommand = firstCommand.substr(0, opLocation) + temp;    
-	    
-	   // cout << "Redirect: " << firstCommand << endl;
+		    
+	    firstCommand = firstCommand + secondCommand;    
+	   
+	    // cout << "Redirect: " << firstCommand << endl;
 
 	    int strlen = firstCommand.length();
             char strchar[strlen+1];
@@ -41,20 +38,8 @@ public:
         
             args[2] = NULL;
             
-            execute(args);
-
-	    // execute the second command if the first passes
-	    
-
-		for (int i = 0; i < 3; i++ ) {
-			cout << args[i];
-             }
-
-
-	    
-	    // *** check if our commands are valid using the forks and stuff method *****	
-	    
-	    
+            execvp(*args,args);
+    
 
 	    return true;	
         }else

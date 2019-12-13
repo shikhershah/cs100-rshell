@@ -352,21 +352,25 @@ public:
 	    if(pCommands.size() == 1){
 		    // test: < 
 		if(pCommands[0].find("<") != -1){
-	      	    cout << "Found < " << endl;
-		    firstCommand = pCommands[0];
+	      	    
+		    // get op location so we can get first and second command
+		    int op = test.find("<");
+                    firstCommand = test.substr(0,op);
+                    secondCommand = test.substr(op+1, test.length());
 		    Redirect R(firstCommand, secondCommand);
 		    R.run();	
 		    // test portion
 		}  
 
 		else if(pCommands[0].find(">" )!= -1) {
-		    cout << "Found > " << endl;
-                    firstCommand = pCommands[0];
+		    int op = test.find(">");
+                    firstCommand = test.substr(0,op);
+                    secondCommand = test.substr(op+1, test.length());		    
 		    Override O (firstCommand, secondCommand);
  		    O.run();
 		}	//test
 		else if(pCommands[0].find("|" )!= -1) {
-                    cout << "Found | " << endl;
+                    
 		    // get op location
                     int op = test.find("|");
 	     	    firstCommand = test.substr(0,op);
