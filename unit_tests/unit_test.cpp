@@ -59,7 +59,17 @@ Base* user_test = new Redirect("echo < first", "");
 EXPECT_EQ(user_test->run(), 0);
 }
 
+TEST(string_test, overrde) {
+Base* user_test = new Override("echo first > second", "");
 
+EXPECT_EQ(user_test->run(), 0);
+}
+
+TEST(string_test, pipe) {
+Base* user_test = new Pipe("echo first | tr A-Z a-z", "");
+
+EXPECT_EQ(user_test->run(), 0);
+}
 int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
