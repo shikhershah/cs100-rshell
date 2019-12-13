@@ -55,13 +55,14 @@ public:
 	//comm: hold a vector<string> of our commands
         vector<string> comm = getAllCommands(user_input);
 	int i = 0;
-        while(i<comm.size()){
+        /* test to print out commands
+	while(i<comm.size()){
             cout << "Command[" << i << "]: ";
             cout << comm[i] << endl;
             i++;
         }
         cout << endl;
-	
+	*/
 	//size_t execute_And = user_input.find("&");
 	
 	// breakdown each command and send to our logic operator
@@ -361,7 +362,6 @@ public:
 		    R.run();	
 		    // test portion
 		}  
-
 		else if(pCommands[0].find(">" )!= -1) {
 		    int op = test.find(">");
                     firstCommand = test.substr(0,op);
@@ -375,26 +375,17 @@ public:
                     int op = test.find("|");
 	     	    firstCommand = test.substr(0,op);
 	            secondCommand = test.substr(op+1, test.length());
-
                     Pipe P (firstCommand, secondCommand);
                     P.run(); 
 		}else {
-
-			// orig
-	   	    firstCommand = pCommands[0];
-	  	    cout << "First.. " << firstCommand << endl;
-		    SingleCommand S(firstCommand, secondCommand);
-		    // test: cout << 
-		    cout << S.run();
-		    	
+	   	    firstCommand = pCommands[0];	  	    
+		    SingleCommand S(firstCommand, secondCommand);	
 	        }
 	     } else{
 		    for(int j =1; j <pCommands.size(); j+2){
 	                if(pCommands[j] == "&&"){
                        	    firstCommand = pCommands[j-1];
 			    secondCommand = pCommands[j+1];
-			    // test:
-			    cout << "First: " << firstCommand << "  Second: " << secondCommand << endl;
 		 	    AndLogicOp A(firstCommand, secondCommand);
 			    A.run();   
                         }else if(pCommands[j] == "||"){

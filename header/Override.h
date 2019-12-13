@@ -44,7 +44,7 @@ public:
 	    // get rid of leading white spaces so we don't add them to our file name
 	    size_t p = secondCommand.find_first_not_of(" \t");
 	    secondCommand = secondCommand.erase(0,p);
-
+	    // 
 	    int gThan;
 	    const char *s = secondCommand.c_str();
 	    gThan = open(secondCommand.c_str(), O_WRONLY | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
@@ -53,7 +53,22 @@ public:
 	    
 	    close(gThan);
 
-	    execvp(*args, args);  
+
+	    if(strcmp(args[0], "exit") == 0 || strcmp(args[0], "Exit") == 0){
+                cout << "Exit";
+                exit(0);
+            }
+            else if(strcmp(args[1], "exit") == 0 || strcmp(args[1], "Exit") == 0){
+                cout << "Exit";
+                exit(0);
+            }
+            else if(execvp(args[0], args) ==-1){
+                cout << "Error" << endl;
+                exit(1);
+            }
+
+	
+	    //execvp(*args, args);  
 
 
 
